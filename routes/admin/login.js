@@ -30,16 +30,21 @@ router.post('/doLogin', async (ctx)=>{
 
     var captcha = ctx.request.body.captcha;
 
+    if(captcha==ctx.session.code){
     //验证用户名和密码是否合法
     var result=await DB.find('user',{"userName":username,"passWord":password});
 
     if(result){
-        console.log(result);
+        //console.log(result);
         ctx.session.userInfo = result[0];
         ctx.redirect(ctx.state.__ROOT__+'/admin');
     }else{
-        console.log("失败")
+        //console.log("失败")
         ctx.body="<script>alert('登录失败');location.href='/admin/login'</script>";
+    }
+    }else{
+        //console.log("验证码错误")
+        ctx.body = "<script>alert('验证码错误');location.href='/admin/login'</script>"
     }
 
 })
@@ -52,9 +57,9 @@ router.get('/code', async (ctx)=>{
 
     const captcha = svgCaptcha.create({ size:4,fontSize: 50, width: 120,height:34,background:"#cc9966" });
 
-    //console.log(captcha.text);
+    //console.log(captcha.text.toLocaleLowerCase());
 
-    ctx.session.code=captcha.text;
+    ctx.session.code=captcha.text.toLocaleLowerCase();
 
     //设置响应头svg格式
     ctx.response.type = 'image/svg+xml';
