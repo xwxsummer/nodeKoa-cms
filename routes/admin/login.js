@@ -22,25 +22,25 @@ router.get('/',async (ctx)=>{
 
 router.post('/doLogin', async (ctx)=>{
 
-    console.log(ctx.request.body);
+    //console.log(ctx.request.body);
 
     var username=ctx.request.body.username;
 
     var password=ctx.request.body.password;
 
-    var captcha = ctx.request.body.captcha;
+    var code = ctx.request.body.captcha;
 
-    if(captcha==ctx.session.code){
+    if (code==ctx.session.code){
     //验证用户名和密码是否合法
     var result=await DB.find('user',{"userName":username,"passWord":password});
 
-    if(result){
+    if(result.length>0){
         //console.log(result);
         ctx.session.userInfo = result[0];
         ctx.redirect(ctx.state.__ROOT__+'/admin');
     }else{
         //console.log("失败")
-        ctx.body="<script>alert('登录失败');location.href='/admin/login'</script>";
+        ctx.body="<script>alert('用户名或密码错误');location.href='/admin/login'</script>";
     }
     }else{
         //console.log("验证码错误")
@@ -67,4 +67,11 @@ router.get('/code', async (ctx)=>{
     ctx.body=captcha.data;
 
 });
+
+router.get('/loginOut', async (ctx) => {
+    ctx.session.userInfo = null;
+    await ctx.render('admin/login');
+})
+
+
 module.exports=router.routes();

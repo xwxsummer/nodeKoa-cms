@@ -19,7 +19,12 @@ router.use(async (ctx,next)=>{
     //模板引擎配置全局的变量
     ctx.state.__ROOT__='http://'+ctx.header.host;
     
-    console.log(ctx.request.url)
+    //定义全局变量 
+    ctx.state.G = {
+        userInfo : ctx.session.userInfo
+    }
+
+   // console.log(ctx.request.url)
    var pathname = url.parse(ctx.request.url).pathname;
     //*****判断用户权限*****
     if(ctx.session.userInfo){
