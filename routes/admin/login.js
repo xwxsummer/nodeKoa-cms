@@ -7,6 +7,7 @@
 
 var DB=require('../../module/db.js');
 var md5=require('md5');
+var sd = require('silly-datetime');
 
 /**验证码模块*/
 var svgCaptcha = require('svg-captcha');
@@ -37,6 +38,13 @@ router.post('/doLogin', async (ctx)=>{
     if(result.length>0){
         //console.log(result);
         ctx.session.userInfo = result[0];
+
+        var id = DB.getObjectId(result[0]._id)
+        DB.update('user', { "_id": id }, { last_time: sd.format(new Date(), 'YYYY-MM-DD HH:mm')});
+
+
+       
+
         ctx.redirect(ctx.state.__ROOT__+'/admin');
     }else{
         //console.log("失败")

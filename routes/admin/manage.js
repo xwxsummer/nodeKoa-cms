@@ -3,12 +3,16 @@
  */
 
 /*管理员的增加修改删除*/
+var DB = require("../../module/db");
 
 var router = require('koa-router')();
 
 router.get('/', async (ctx) => {
+    var result = await DB.find("user",{});
 
-    ctx.render('admin/manage/list');
+    console.log(result);
+
+    ctx.render('admin/manage/list',{list:result});
 
 })
 

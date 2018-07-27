@@ -11,6 +11,8 @@ var newscate=require('./admin/newscate.js');
 
 var login=require('./admin/login.js');
 
+var manage=require('./admin/manage.js');
+
 var url = require("url");
 
 //配置中间件，获取url地址
@@ -21,7 +23,8 @@ router.use(async (ctx,next)=>{
 
     // console.log(ctx.request.url)
     var pathname = url.parse(ctx.request.url).pathname.substring(1);
-    console.log(pathname)
+
+    // console.log(pathname)
     var PathUrl = pathname.split('/')
     //定义全局变量 
     
@@ -29,7 +32,7 @@ router.use(async (ctx,next)=>{
         url: PathUrl,
         userInfo : ctx.session.userInfo
     }
-    console.log(PathUrl);
+    //console.log(PathUrl);
   
     //*****判断用户权限*****
     if(ctx.session.userInfo){
@@ -52,11 +55,10 @@ router.get('/',(ctx)=>{
     ctx.render('admin/index');
 })
 
+router.use('/manage',manage)
 router.use('/user',user);
 router.use('/focus',focus);
-
 router.use('/login',login);
-
 router.use('/newscate',newscate);
 
 

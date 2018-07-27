@@ -23,7 +23,10 @@ app.use(koaBodyparser());
 render(app, {
     root: path.join(__dirname, 'views'),
     extname: '.html',
-    debug: process.env.NODE_ENV !== 'production'
+    debug: process.env.NODE_ENV !== 'production',
+    //扩展时间管道
+    dateFormat:dataFormat = function(value){return sd.format(new Data(value),'YYY-MM-DD HH-mm')}
+    //html页面{{$value.last_time|dateFormat}}管道的使用
 });
 
 //配置session
