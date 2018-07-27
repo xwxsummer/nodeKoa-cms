@@ -18,14 +18,19 @@ var url = require("url");
 router.use(async (ctx,next)=>{
     //模板引擎配置全局的变量
     ctx.state.__ROOT__='http://'+ctx.header.host;
-    
+
+    // console.log(ctx.request.url)
+    var pathname = url.parse(ctx.request.url).pathname.substring(1);
+    console.log(pathname)
+    var PathUrl = pathname.split('/')
     //定义全局变量 
+    
     ctx.state.G = {
+        url: PathUrl,
         userInfo : ctx.session.userInfo
     }
-
-   // console.log(ctx.request.url)
-   var pathname = url.parse(ctx.request.url).pathname;
+    console.log(PathUrl);
+  
     //*****判断用户权限*****
     if(ctx.session.userInfo){
 
@@ -33,7 +38,7 @@ router.use(async (ctx,next)=>{
         await next();
     }else{
         //不成功跳转到登录页面
-        if (pathname == '/admin/login' || pathname == '/admin/login/doLogin' || pathname == '/admin/login/code'){
+        if (pathname == 'admin/login' || pathname == 'admin/login/doLogin' || pathname == 'admin/login/code'){
             await next();
         }else{
             ctx.redirect('/admin/login');
